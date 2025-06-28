@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class Transaction {
 
     @NotNull
     @PastOrPresent(message = "Transaction date can't be in the future")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Positive(message = "Amount must be positive")
     private int amount;
