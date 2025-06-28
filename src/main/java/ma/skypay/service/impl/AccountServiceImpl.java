@@ -7,9 +7,7 @@ import ma.skypay.strategy.TransactionStrategy;
 import ma.skypay.strategy.impl.DepositStrategy;
 import ma.skypay.strategy.impl.WithdrawStrategy;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.ThreadLocalRandom;
+import java.time.format.DateTimeFormatter;
 
 public class AccountServiceImpl implements AccountService {
     @Getter
@@ -27,31 +25,26 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deposit(int amount) {
         TransactionStrategy transactionStrategy = new DepositStrategy();
-        transactionStrategy.execute(account, amount, getRandomDateBetween(LocalDate.now().minusDays(10), LocalDate.now()));
+        transactionStrategy.execute(account, amount);
     }
 
     @Override
     public void withdraw(int amount) {
         TransactionStrategy transactionStrategy = new WithdrawStrategy();
-        transactionStrategy.execute(account, amount, getRandomDateBetween(LocalDate.now().minusDays(10), LocalDate.now()));
+        transactionStrategy.execute(account, amount);
     }
 
     @Override
     public void printStatement() {
-        ;
+
         System.out.println("    DATE    |   AMOUNT  |  BALANCE");
         account.getTransactions().stream()
                 .sorted((t1, t2) -> t2.getDate().compareTo(t1.getDate()))
                 .forEach(t -> {
-                    String formatingSpace = String.valueOf(t.getAmount() > 0 ? " " : "");
+                    String formatingSpace = t.getAmount() > 0 ? " " : "";
                     System.out.printf("%s  |  %s%d     |  %d\n",
-                            t.getDate(), formatingSpace, t.getAmount(), t.getBalanceAfterTransaction());
+                            t.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE), formatingSpace, t.getAmount(), t.getBalanceAfterTransaction());
                 });
     }
 
-    public static LocalDate getRandomDateBetween(LocalDate start, LocalDate end) {
-        long daysBetween = ChronoUnit.DAYS.between(start, end);
-        long randomDays = ThreadLocalRandom.current().nextLong(daysBetween + 1);
-        return start.plusDays(randomDays);
-    }
 }
