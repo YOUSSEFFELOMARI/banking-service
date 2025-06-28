@@ -53,7 +53,7 @@ class AccountThreadSafetyTest {
 
         System.out.println("Final balance: " + actualBalance);
         System.out.println("Transaction count: " + txCount);
-        accountService.printStatement();// the statement will not be ordered as it should be, because im using random date and comparing with days
+        accountService.printStatement();
 
         assertTrue(actualBalance >= expectedMinBalance && actualBalance <= expectedMaxBalance);
         assertEquals(txCount, account.getTransactions().size());
